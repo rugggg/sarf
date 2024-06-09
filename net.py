@@ -46,11 +46,15 @@ class WaveSegEncoder(nn.Module):
 
 class WaveSegDecoder(nn.Module):
 
+    latent_dim: int
+    c_out: int
+
     @nn.compact
     def __call__(self, x):
-        # conv down
-        x = nn.ConvTranspose(features=8, kernel_size=(3,3), strides=(2,2))(x)
+        x = nn.Dense(features=2*16*3)(x)
         x = nn.relu(x)
+        
+        x = x.reshape(x.shape[0], 4, 4, -1)
  
         x = nn.ConvTranspose(features=16, kernel_size=(3,3), strides=(2,2))(x)
         x = nn.relu(x)
@@ -97,6 +101,27 @@ def encoder_test():
     print(out.shape)
     del out, encoder, params
 
+def decoder_test():
+    ## Test decoder implementation
+    # Random key for initialization
+    rng = random.PRNGKey(0)
+    # Example latents as input
+    rng, lat_rng = random.split(rng)
+    latents = random.normal(lat_rng, (16, 128))
+    # Create decoder
+    decoder = WaveSegDecoder(latent_dim=128, c_out=3)
+    # Initialize parameters of decoder with random key and latents
+    rng, init_rng = random.split(rng)
+    params = decoder.init(init_rng, latents)['params']
+    # Apply decoder with parameters on the images
+    out = decoder.apply({'params': params}, latents)
+    out.shape
+
+    del out, decoder, params
+
+
+
+
 # Transformations applied on each image => bring them into a numpy array
 def image_to_numpy(img):
     img = np.array(img, dtype=np.float32)
@@ -132,3 +157,4 @@ if __name__ == "__main__":
 
 
     encoder_test()
+    decoder_test()
