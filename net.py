@@ -4,6 +4,15 @@ import optax
 from flax import linen as nn
 
 
+class Upsample2D(nn.Module):
+    """
+    Upsample layer for UNet or other nets requiring transpose conve operations)
+    """
+
+    def setup(self):
+        self.conv = nn.Conv(self.chans, (3,3), ()
+
+
 
 class WaveSeg(nn.Module):
 
