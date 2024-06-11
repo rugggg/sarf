@@ -81,7 +81,7 @@ def mse_recon_loss(model, params, batch):
 class WaveSegSegment(nn.Module):
     def setup(self):
         self.encoder = WaveSegEncoder(latent_dim=128)
-        self.decoder = WaveSegDecoder(latent_dim=128)
+        self.decoder = WaveSegDecoder(latent_dim=128, c_out=3)
 
 
 def encoder_test():
@@ -96,7 +96,6 @@ def encoder_test():
     params = encoder.init(rng, imgs)['params']
     # Apply encoder with parameters on the images
     out = encoder.apply({'params': params}, imgs)
-    out.shape
     print(out)
     print(out.shape)
     del out, encoder, params
@@ -115,8 +114,7 @@ def decoder_test():
     params = decoder.init(init_rng, latents)['params']
     # Apply decoder with parameters on the images
     out = decoder.apply({'params': params}, latents)
-    out.shape
-
+    print(out.shape)
     del out, decoder, params
 
 
@@ -154,7 +152,6 @@ if __name__ == "__main__":
 
     # data
     train_loader = data.DataLoader(train_set, batch_size=256, shuffle=True, drop_last=True, pin_memory=True, num_workers=4, collate_fn=numpy_collate, persistent_workers=True)
-
 
     encoder_test()
     decoder_test()
