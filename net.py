@@ -68,10 +68,6 @@ class WaveSegDecoder(nn.Module):
         x = nn.ConvTranspose(features=32, kernel_size=(3,3), strides=(2,2))(x)
         x = nn.relu(x)
 
-        # base
-        #x = nn.ConvTranspose(features=64, kernel_size=(3,3), strides=(2,2))(x)
-        #x = nn.relu(x)
-
         x = nn.ConvTranspose(features=3, kernel_size=(3,3), strides=(2,2))(x)
         x = nn.tanh(x)
 
