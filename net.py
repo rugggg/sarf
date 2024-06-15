@@ -134,8 +134,6 @@ def decoder_test():
     del out, decoder, params
 
 
-
-
 # Transformations applied on each image => bring them into a numpy array
 def image_to_numpy(img):
     img = np.array(img, dtype=np.float32)
